@@ -1,0 +1,14 @@
+{
+  "web_site_icon_Url": "/logo.png",
+  "web_site_male_image": "/web_site_male_image.png",
+  "web_site_admin_image": "/web_site_admin_image.png",
+  "web_site_other_image": "/web_site_other_image.png",
+  "web_site_female_image": "/web_site_female_image.png",
+  
+  "web_site_logo_title": "ISCO Job Board System",
+  "web_site_layout_title": "ISCO Job Board System",
+  "web_site_super_admin_image": "/web_site_super_admin_image.png",
+  "web_site_login_page_background_image": "/web_site_login_page_background_image.png",
+  "web_site_layout_description": "Manage ISCO Job Board System for the users to access medical services.",
+  "login_background_title": "Getting manage your Candidates recruiting process with ISCO Job Board System dashboard"
+}
