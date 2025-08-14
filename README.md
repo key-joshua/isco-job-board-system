@@ -1,7 +1,7 @@
 # ISCO JOB BOARD SYSTEM
 
 - This is A robust web application for managing human resource operations, including candidates data.
-- Access Hosted UI: https://isco-job-board-system.vercel.app
+- Access Hosted UI: https://isco-job-board-system-ui.vercel.app/
 
 ## INSTALLATION
 
