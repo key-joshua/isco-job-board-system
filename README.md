@@ -1,11 +1,11 @@
-# ISCO Job Board System SYSTEM
+# ISCO JOB BOARD SYSTEM
 
-- This is A robust frontend for managing human resource operations, including candidates data.
-- Access Hosted URL: https://hr-management-system-seven.vercel.app
+- This is A robust web application for managing human resource operations, including candidates data.
+- Access Hosted UI: https://isco-job-board-system.vercel.app
 
 ## INSTALLATION
 
-- Clone the repository: ```git clone https://github.com/key-joshua/hr-managment-system.git```
+- Clone the repository: ```https://github.com/key-joshua/isco-job-board-system.git```
 - Node Version ```v22.12.0```.
 
 ## SETUP DATABASE AND RUN APPLICATION
