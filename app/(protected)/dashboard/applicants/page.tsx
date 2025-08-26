@@ -17,6 +17,7 @@ import { ApplicantManagementModal } from "@/components/applicant-management-moda
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function Applicant() {
+  const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [applicants, setApplicants] = useState<any[]>([])
@@ -30,6 +31,7 @@ export default function Applicant() {
   }, [])
 
   const loadApplicants = async () => {
+    setLoading(true);
     try {
       const response = await APIsRequest.getApplicantsRequest()
       const data = await response.json()
@@ -44,7 +46,7 @@ export default function Applicant() {
       setAlertDetails({ status: 'error', message: error?.message || error?.error || 'An error occurred', id: Date.now() });
       console.error("Failed to load applicants:", error)
     } finally {
-      setTimeout(() => { setAlertDetails({ status: '', message: '', id: '' }); }, 3000);
+      setTimeout(() => { setLoading(false); setAlertDetails({ status: '', message: '', id: '' }); }, 3000);
     }
   }
 
@@ -206,7 +208,7 @@ export default function Applicant() {
                   </table>
                 </div>
 
-                {filteredApplicants.length === 0 && ( <div className="text-center py-12"> <p className="text-gray-500 mb-4"> No applicant found matching your search </p> </div> )}
+                {filteredApplicants.length === 0 && loading === false && ( <div className="text-center py-12"> <p className="text-gray-500 mb-4"> No applicant found matching your search </p> </div> )}
               </div>
 
               {deleteConfirmation.isOpen && (

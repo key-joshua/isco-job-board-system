@@ -41,6 +41,7 @@ interface Job {
 
 export default function Job() {
   const [jobs, setJobs] = useState<Job[]>([])
+  const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [statusFilter, setStatusFilter] = useState("All Status")
@@ -55,6 +56,7 @@ export default function Job() {
   }, [])
 
   const loadJobs = async () => {
+    setLoading(true);
     try {
       const response = await APIsRequest.getJobsRequest()
       const data = await response.json()
@@ -69,7 +71,7 @@ export default function Job() {
       setAlertDetails({ status: 'error', message: error?.message || error?.error || 'An error occurred', id: Date.now() });
       console.error("Failed to load jobs:", error)
     } finally {
-      setTimeout(() => { setAlertDetails({ status: '', message: '', id: '' }); }, 3000);
+      setTimeout(() => { setLoading(false); setAlertDetails({ status: '', message: '', id: '' }); }, 3000);
     }
   }
 
@@ -251,7 +253,7 @@ export default function Job() {
                   </table>
                 </div>
 
-                {filteredJobs.length === 0 && (
+                {filteredJobs.length === 0 && loading === false && (
                   <div className="text-center py-12">
                     <p className="text-gray-500 mb-4"> {positionFilter === "2+" ? "No jobs found with 2+ available positions" : positionFilter === "1" ? "No jobs found with exactly 1 position" : "No jobs found matching your criteria"} </p>
                     <Button onClick={handleCreateJob} style={{ backgroundColor: "#4B93E7" }} className="text-white-active bg-white-active"> <Plus className="h-4 w-4 mr-2" /> Create New Job </Button>
