@@ -39,6 +39,7 @@ interface Job {
 export default function Jobs() {
   const [user, setUsr] = useState<any>({});
   const [jobs, setJobs] = useState<Job[]>([])
+  const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [typeFilter, setTypeFilter] = useState("All Types")
   const [locationFilter, setLocationFilter] = useState("All Locations")
@@ -55,6 +56,7 @@ export default function Jobs() {
 
   useEffect(() => {
     const loadJobs = async () => {
+        setLoading(true);
         try {
             const response = await APIsRequest.getJobsRequest()
             const data = await response.json()
@@ -69,7 +71,7 @@ export default function Jobs() {
             setAlertDetails({ status: 'error', message: error?.message || error?.error || 'An error occurred', id: Date.now() });
             console.error("Failed to load jobs:", error)
         } finally {
-            setTimeout(() => { setAlertDetails({ status: '', message: '', id: '' }); }, 3000);
+            setTimeout(() => { setLoading(false); setAlertDetails({ status: '', message: '', id: '' }); }, 3000);
         }
     }
 
@@ -194,51 +196,53 @@ export default function Jobs() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {filteredJobs.map((job, index) => (
-                                    <motion.div key={job.id} className="bg-white-active rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} >
-                                        <div className="flex items-start justify-between mb-4">
-                                            <div className="flex-1">
-                                                <h3 className="text-xl font-semibold text-[#082777] mb-1">{job.title}</h3>
-                                                <div className="flex items-center text-[#4B93E7] mb-2"> <span className="text-sm">{job.company}</span> </div>
+                            { filteredJobs.length > 0 && loading === false && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {filteredJobs.map((job, index) => (
+                                        <motion.div key={job.id} className="bg-white-active rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} >
+                                            <div className="flex items-start justify-between mb-4">
+                                                <div className="flex-1">
+                                                    <h3 className="text-xl font-semibold text-[#082777] mb-1">{job.title}</h3>
+                                                    <div className="flex items-center text-[#4B93E7] mb-2"> <span className="text-sm">{job.company}</span> </div>
+                                                </div>
+                                                {job.location === 'Onsite' && <Badge className="bg-[#F7AC25] text-white-active"> <Building2 className="h-3 w-3 mr-1" /> Onsite</Badge>}
+                                                {job.location === 'Hybrid' && <Badge className="bg-[#9dc2ef] text-white-active ml-2"> <Shuffle className="h-3 w-3 mr-1" /> Hybrid</Badge>}
+                                                {job.location === 'Remote' && <Badge className="bg-[#9dc2ef] text-white-active ml-2"> <Globe className="h-3 w-3 mr-1" /> Remote</Badge>}
                                             </div>
-                                            {job.location === 'Onsite' && <Badge className="bg-[#F7AC25] text-white-active"> <Building2 className="h-3 w-3 mr-1" /> Onsite</Badge>}
-                                            {job.location === 'Hybrid' && <Badge className="bg-[#9dc2ef] text-white-active ml-2"> <Shuffle className="h-3 w-3 mr-1" /> Hybrid</Badge>}
-                                            {job.location === 'Remote' && <Badge className="bg-[#9dc2ef] text-white-active ml-2"> <Globe className="h-3 w-3 mr-1" /> Remote</Badge>}
-                                        </div>
 
-                                        <div className="space-y-2 mb-4">
-                                            <div className="flex items-center text-gray-600 text-sm">
-                                            <   MapPin className="h-4 w-4 mr-2" /> {job.location}
+                                            <div className="space-y-2 mb-4">
+                                                <div className="flex items-center text-gray-600 text-sm">
+                                                <   MapPin className="h-4 w-4 mr-2" /> {job.location}
+                                                </div>
+                                                <div className="flex items-center text-gray-600 text-sm">
+                                                    <DollarSign className="h-4 w-4 mr-2" /> {job.salary}
+                                                </div>
+                                                <div className="flex items-center text-gray-600 text-sm">
+                                                    <Calendar className="h-4 w-4 mr-2" /> Deadline: {new Date(job.deadline).toLocaleDateString()}
+                                                </div>
                                             </div>
-                                            <div className="flex items-center text-gray-600 text-sm">
-                                                <DollarSign className="h-4 w-4 mr-2" /> {job.salary}
+
+                                            <div className="mb-4">
+                                                <Badge className="bg-[#082777] text-white-active mr-2">{job.type}</Badge>
+                                                <Badge className="text-white-active" style={{ backgroundColor: getStatusColor(job.status) }}> {job.status} </Badge>
                                             </div>
-                                            <div className="flex items-center text-gray-600 text-sm">
-                                                <Calendar className="h-4 w-4 mr-2" /> Deadline: {new Date(job.deadline).toLocaleDateString()}
+
+                                            <p className="text-gray-600 text-sm mb-6">
+                                                {job.description.length > 130 ? `${job.description.substring(0, 130)}...` : job.description}
+                                            </p>
+
+                                            <div className="flex justify-end">
+                                                { user.Applicants?.some((item: any) => item.job_id === job.id)
+                                                    ? (<Button size="sm" className="w-1/2 bg-primary-mini-active text-white-active" > ✓ Already Applied </Button>)
+                                                    : (<Button disabled={job.status === "CLOSED"} onClick={() => handleApply(job)} size="sm" className="w-1/2 bg-[#F7AC25] hover:bg-[#F7AC25]/90 text-white-active" > <Send className="h-4 w-4 mr-2" /> Apply Now </Button>)
+                                                }
                                             </div>
-                                        </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )}
 
-                                        <div className="mb-4">
-                                            <Badge className="bg-[#082777] text-white-active mr-2">{job.type}</Badge>
-                                            <Badge className="text-white-active" style={{ backgroundColor: getStatusColor(job.status) }}> {job.status} </Badge>
-                                        </div>
-
-                                        <p className="text-gray-600 text-sm mb-6">
-                                            {job.description.length > 130 ? `${job.description.substring(0, 130)}...` : job.description}
-                                        </p>
-
-                                        <div className="flex justify-end">
-                                            { user.Applicants?.some((item: any) => item.job_id === job.id)
-                                                ? (<Button size="sm" className="w-1/2 bg-primary-mini-active text-white-active" > ✓ Already Applied </Button>)
-                                                : (<Button disabled={job.status === "CLOSED"} onClick={() => handleApply(job)} size="sm" className="w-1/2 bg-[#F7AC25] hover:bg-[#F7AC25]/90 text-white-active" > <Send className="h-4 w-4 mr-2" /> Apply Now </Button>)
-                                            }
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </div>
-
-                            {filteredJobs.length === 0 && (
+                            {filteredJobs.length === 0 && loading === false && (
                                 <div className="text-center py-12">
                                     <div className="text-gray-400 mb-4"> <Search className="h-16 w-16 mx-auto mb-4" /> </div>
                                     <h3 className="text-xl font-semibold text-gray-600 mb-2">No jobs found</h3>
