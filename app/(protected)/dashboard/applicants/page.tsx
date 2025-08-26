@@ -158,55 +158,57 @@ export default function Applicant() {
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr>
-                        <th className="text-left p-4 font-medium text-gray-600">Applicants</th>
-                        <th className="text-left p-4 font-medium text-gray-600">Applied Position</th>
-                        <th className="text-left p-4 font-medium text-gray-600">Status</th>
-                        <th className="text-left p-4 font-medium text-gray-600">Created At</th>
-                        <th className="text-left p-4 font-medium text-gray-600">Updated At</th>
-                        <th className="text-left p-4 font-medium text-gray-600">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredApplicants.map((applicant) => (
-                        <motion.tr key={applicant.id} className="border-b border-gray-100 hover:bg-gray-50" initial={{ opacity: 0 }} animate={{ opacity: 1 }} >
-                          <td className="p-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
-                                <img src={applicant.Users?.profile_picture || "/user-avatar.png?height=40&width=40"} alt="Avatar" width={40} height={40} className="w-full h-full object-cover" />
+                { filteredApplicants.length > 0 && loading === false && (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr>
+                          <th className="text-left p-4 font-medium text-gray-600">Applicants</th>
+                          <th className="text-left p-4 font-medium text-gray-600">Applied Position</th>
+                          <th className="text-left p-4 font-medium text-gray-600">Status</th>
+                          <th className="text-left p-4 font-medium text-gray-600">Created At</th>
+                          <th className="text-left p-4 font-medium text-gray-600">Updated At</th>
+                          <th className="text-left p-4 font-medium text-gray-600">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredApplicants.map((applicant) => (
+                          <motion.tr key={applicant.id} className="border-b border-gray-100 hover:bg-gray-50" initial={{ opacity: 0 }} animate={{ opacity: 1 }} >
+                            <td className="p-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
+                                  <img src={applicant.Users?.profile_picture || "/user-avatar.png?height=40&width=40"} alt="Avatar" width={40} height={40} className="w-full h-full object-cover" />
+                                </div>
+                                <div>
+                                  <div className="font-medium" style={{ color: "#082777" }}> {applicant.full_name} </div>
+                                  <div className="text-sm text-gray-500">{timeAgo(applicant.updated_at)}</div>
+                                </div>
                               </div>
-                              <div>
-                                <div className="font-medium" style={{ color: "#082777" }}> {applicant.full_name} </div>
-                                <div className="text-sm text-gray-500">{timeAgo(applicant.updated_at)}</div>
+                            </td>
+                            <td className="p-4">
+                              <span className="font-medium" style={{ color: "#082777" }}> {applicant.Jobs.title} </span>
+                            </td>
+                            <td className="p-4">
+                              <Badge className="text-white-active" style={{ backgroundColor: getStatusColor(applicant.status) }}> {applicant.status} </Badge>
+                            </td>
+                            <td className="p-4">
+                              <span className="text-sm text-gray-600">{new Date(applicant.created_at).toLocaleString()}</span>
+                            </td>
+                            <td className="p-4">
+                              <span className="text-sm text-gray-600">{new Date(applicant.updated_at).toLocaleString()}</span>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <Button variant="ghost" size="sm" onClick={() => handleViewApplicant(applicant)} className="text-gray-600 hover:text-gray-900" > View <Eye className="h-4 w-4 ml-1" /> </Button>
+                                <Button variant="ghost" size="sm" onClick={() => handleDeleteApplicant(applicant.id)} className="text-red-600 hover:text-red-900 hover:bg-red-50" > Delete <Trash2 className="h-4 w-4 ml-1" /> </Button>
                               </div>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <span className="font-medium" style={{ color: "#082777" }}> {applicant.Jobs.title} </span>
-                          </td>
-                          <td className="p-4">
-                            <Badge className="text-white-active" style={{ backgroundColor: getStatusColor(applicant.status) }}> {applicant.status} </Badge>
-                          </td>
-                          <td className="p-4">
-                            <span className="text-sm text-gray-600">{new Date(applicant.created_at).toLocaleString()}</span>
-                          </td>
-                          <td className="p-4">
-                            <span className="text-sm text-gray-600">{new Date(applicant.updated_at).toLocaleString()}</span>
-                          </td>
-                          <td className="p-4">
-                            <div className="flex items-center gap-2">
-                              <Button variant="ghost" size="sm" onClick={() => handleViewApplicant(applicant)} className="text-gray-600 hover:text-gray-900" > View <Eye className="h-4 w-4 ml-1" /> </Button>
-                              <Button variant="ghost" size="sm" onClick={() => handleDeleteApplicant(applicant.id)} className="text-red-600 hover:text-red-900 hover:bg-red-50" > Delete <Trash2 className="h-4 w-4 ml-1" /> </Button>
-                            </div>
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
 
                 {filteredApplicants.length === 0 && loading === false && ( <div className="text-center py-12"> <p className="text-gray-500 mb-4"> No applicant found matching your search </p> </div> )}
               </div>

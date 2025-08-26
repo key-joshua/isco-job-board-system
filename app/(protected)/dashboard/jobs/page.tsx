@@ -205,53 +205,55 @@ export default function Job() {
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr>
-                        <th className="text-left p-4 font-medium text-gray-600">Positions</th>
-                        <th className="text-left p-4 font-medium text-gray-600">Available Positions</th>
-                        <th className="text-left p-4 font-medium text-gray-600">Status</th>
-                        <th className="text-left p-4 font-medium text-gray-600">Created At</th>
-                        <th className="text-left p-4 font-medium text-gray-600">Updated At</th>
-                        <th className="text-left p-4 font-medium text-gray-600">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredJobs.map((job) => (
-                        <motion.tr key={job.id} className="border-b border-gray-100 hover:bg-gray-50" initial={{ opacity: 0 }} animate={{ opacity: 1 }} >
-                          <td className="p-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white-active bg-white-active text-sm font-medium" style={{ backgroundColor: "#4B93E7" }} > {job.title.charAt(0)} </div>
-                              <div>
-                                <div className="font-medium" style={{ color: "#082777" }}> {job.title} </div>
-                                <div className="text-sm text-gray-500">{timeAgo(job.updated_at)}</div>
+                { filteredJobs.length > 0 && loading === false && 
+                  (<div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr>
+                          <th className="text-left p-4 font-medium text-gray-600">Positions</th>
+                          <th className="text-left p-4 font-medium text-gray-600">Available Positions</th>
+                          <th className="text-left p-4 font-medium text-gray-600">Status</th>
+                          <th className="text-left p-4 font-medium text-gray-600">Created At</th>
+                          <th className="text-left p-4 font-medium text-gray-600">Updated At</th>
+                          <th className="text-left p-4 font-medium text-gray-600">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredJobs.map((job) => (
+                          <motion.tr key={job.id} className="border-b border-gray-100 hover:bg-gray-50" initial={{ opacity: 0 }} animate={{ opacity: 1 }} >
+                            <td className="p-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center text-white-active bg-white-active text-sm font-medium" style={{ backgroundColor: "#4B93E7" }} > {job.title.charAt(0)} </div>
+                                <div>
+                                  <div className="font-medium" style={{ color: "#082777" }}> {job.title} </div>
+                                  <div className="text-sm text-gray-500">{timeAgo(job.updated_at)}</div>
+                                </div>
                               </div>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <span className="font-medium" style={{ color: "#082777" }}> {job.available_positions} </span>
-                          </td>
-                          <td className="p-4">
-                            <Badge className="text-white-active" style={{ backgroundColor: getStatusColor(job.status) }}> {job.status} </Badge>
-                          </td>
-                          <td className="p-4">
-                            <span className="text-sm text-gray-600">{new Date(job.created_at).toLocaleString()}</span>
-                          </td>
-                          <td className="p-4">
-                            <span className="text-sm text-gray-600">{new Date(job.updated_at).toLocaleString()}</span>
-                          </td>
-                          <td className="p-4">
-                            <div className="flex items-center gap-2">
-                              <Button variant="ghost" size="sm" onClick={() => handleViewJob(job)} className="text-gray-600 hover:text-gray-900" > View <Eye className="h-4 w-4 ml-1" /> </Button>
-                              <Button variant="ghost" size="sm" onClick={() => handleDeleteJob(job.id)} className="text-red-600 hover:text-red-900 hover:bg-red-50" > Delete <Trash2 className="h-4 w-4 ml-1" /> </Button>
-                            </div>
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                            </td>
+                            <td className="p-4">
+                              <span className="font-medium" style={{ color: "#082777" }}> {job.available_positions} </span>
+                            </td>
+                            <td className="p-4">
+                              <Badge className="text-white-active" style={{ backgroundColor: getStatusColor(job.status) }}> {job.status} </Badge>
+                            </td>
+                            <td className="p-4">
+                              <span className="text-sm text-gray-600">{new Date(job.created_at).toLocaleString()}</span>
+                            </td>
+                            <td className="p-4">
+                              <span className="text-sm text-gray-600">{new Date(job.updated_at).toLocaleString()}</span>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <Button variant="ghost" size="sm" onClick={() => handleViewJob(job)} className="text-gray-600 hover:text-gray-900" > View <Eye className="h-4 w-4 ml-1" /> </Button>
+                                <Button variant="ghost" size="sm" onClick={() => handleDeleteJob(job.id)} className="text-red-600 hover:text-red-900 hover:bg-red-50" > Delete <Trash2 className="h-4 w-4 ml-1" /> </Button>
+                              </div>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
 
                 {filteredJobs.length === 0 && loading === false && (
                   <div className="text-center py-12">
