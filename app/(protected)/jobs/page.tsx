@@ -71,7 +71,8 @@ export default function Jobs() {
             setAlertDetails({ status: 'error', message: error?.message || error?.error || 'An error occurred', id: Date.now() });
             console.error("Failed to load jobs:", error)
         } finally {
-            setTimeout(() => { setLoading(false); setAlertDetails({ status: '', message: '', id: '' }); }, 3000);
+            setLoading(false); 
+            setTimeout(() => { setAlertDetails({ status: '', message: '', id: '' }); }, 3000);
         }
     }
 
