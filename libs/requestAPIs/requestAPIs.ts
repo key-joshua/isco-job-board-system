@@ -4,9 +4,9 @@ export const APIsRequest = {
   signupRequest: async (deviceId: string, data: any) => {
     const formData = new FormData();
     formData.append('email', data.email);
-    formData.append('password', data.password);
     formData.append('is_google', data.is_google);
     data?.file && formData.append('profile_picture', data.file);
+    data?.password && formData.append('password', data.password);
     formData.append('username', `${data.lastname} ${data.firstname}`);
 
     const headers = { 'User-Device': deviceId };

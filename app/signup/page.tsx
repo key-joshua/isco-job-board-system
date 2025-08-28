@@ -66,7 +66,6 @@ const Signup = () => {
     } catch (error: any) {
         setAlertDetails({ status: 'error', message: error?.message || error?.error || 'An error occurred', id: Date.now() });
         setNormalButtonIsLoading(false)
-        
         return;
     }
   }
@@ -90,7 +89,7 @@ const Signup = () => {
         }
 
         const googleData = await googleResponse.json();
-        const googleDataBody = { file: formData?.file, email: googleData?.email, username: googleData?.name, is_google: true, };
+        const googleDataBody = { email: googleData?.email, lastname: googleData?.given_name, firstname: googleData?.family_name, is_google: true };
 
         try {
           const response = await APIsRequest.signupRequest(decryptUserDevice, googleDataBody);
@@ -109,13 +108,12 @@ const Signup = () => {
           if (data.data.user.role === 'APPLICANT') window.location.href = `/jobs`;
         } catch (error: any) {
           setAlertDetails({ status: 'error', message: error?.message || error?.error || 'An error occurred', id: Date.now() });
-          
           setGoogleButtonIsLoading(false)
           return;
         }
+
       } catch (error: any) {
           setAlertDetails({ status: 'error', message: error?.message || error?.error || 'An error occurred', id: Date.now() });
-          
           setGoogleButtonIsLoading(false)
           return;
       }
@@ -247,6 +245,7 @@ const SignupPage = () => (
     <Signup />
   </GoogleOAuthProvider>
 );
+
 SignupPage.displayName = "Signup";
 
 export default SignupPage;

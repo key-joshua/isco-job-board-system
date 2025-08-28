@@ -84,7 +84,7 @@ const Login = () => {
         }
 
         const googleData = await googleResponse.json();
-        const googleDataBody = { email: googleData?.email, username: googleData?.name, is_google: true, };
+        const googleDataBody = { email: googleData?.email, lastname: googleData?.given_name, firstname: googleData?.family_name, is_google: true };
 
         try {
           const response = await APIsRequest.signinRequest(decryptUserDevice, googleDataBody);
@@ -105,16 +105,15 @@ const Login = () => {
         } catch (error: any) {
           setAlertDetails({ status: 'error', message: error?.message || error?.error || 'An error occurred', id: Date.now() });
           setGoogleButtonIsLoading(false)
-          
           return;
         }
       } catch (error: any) {
         setAlertDetails({ status: 'error', message: error?.message || error?.error || 'An error occurred', id: Date.now() });
         setGoogleButtonIsLoading(false)
-        
         return;
       }
     },
+
     onError: (error: any) => {
       setAlertDetails({ status: 'error', message: error?.message || error?.error || 'An error occurred', id: Date.now() });
       setGoogleButtonIsLoading(false)
